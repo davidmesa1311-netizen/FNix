@@ -13,7 +13,6 @@ import {
   Wallet,
   X,
   MoreHorizontal,
-  Clock,
   Sparkles as WellnessIcon,
   BarChart3
 } from 'lucide-react';

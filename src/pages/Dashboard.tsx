@@ -4,28 +4,21 @@ import {
   CircleCheck, 
   Target as TargetIcon,
   ArrowRight,
-  Tag,
   Sparkles,
   Settings2,
   Activity,
   Wind,
-  Plus,
   Layout,
-  Maximize2,
-  Circle
+  Maximize2
 } from 'lucide-react';
 import { 
   getDashboardSummary,
-  getDailyCategorySummary,
   setSetting
 } from '../db/db';
 import { 
   fetchAllSettings, 
   fetchCurrentSeason 
 } from '../db/queries';
-import { 
-  getDailyFocus
-} from '../lib/focusEngine';
 import type { FocusRecommendation } from '../lib/focusEngine';
 import { 
   getPerformanceMetrics
@@ -44,7 +37,6 @@ const Dashboard: React.FC = () => {
     { label: 'Completadas', value: '0', icon: <CircleCheck size={24} />, color: 'success' },
     { label: 'Metas Activas', value: '0', icon: <TargetIcon size={24} />, color: 'warning' },
   ]);
-  const [categorySummary, setCategorySummary] = useState<any[]>([]);
   const [recommendations, setRecommendations] = useState<FocusRecommendation[]>([]);
   const [metrics, setMetrics] = useState<PerformanceMetrics | null>(null);
   const [activeSeason, setActiveSeason] = useState<any>(null);
@@ -58,9 +50,8 @@ const Dashboard: React.FC = () => {
     setLoading(true);
     try {
       const m = await getPerformanceMetrics();
-      const [dashData, cats, recs, settings, season, rhythm] = await Promise.all([
+      const [dashData, recs, settings, season, rhythm] = await Promise.all([
         getDashboardSummary(),
-        getDailyCategorySummary(),
         AIPlannerService.getDailyRecommendations(m.estimatedEnergy),
         fetchAllSettings(),
         fetchCurrentSeason(),
@@ -73,7 +64,6 @@ const Dashboard: React.FC = () => {
         { label: 'Completadas', value: String(dashData.tasks?.completed || 0), icon: <CircleCheck size={24} />, color: 'success' },
         { label: 'Metas Activas', value: String(dashData.goals?.active || 0), icon: <TargetIcon size={24} />, color: 'warning' },
       ]);
-      setCategorySummary(cats);
       setRecommendations(recs);
       setMetrics(perfMetrics);
       setMode(settings.mode || 'assisted');

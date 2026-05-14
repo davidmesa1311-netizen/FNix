@@ -1,16 +1,11 @@
 import { TaskService } from './TaskService';
-
-export interface Suggestion {
-  title: string;
-  reason: string;
-  type: 'focus' | 'rest' | 'quick';
-}
+import { FocusRecommendation } from '../lib/focusEngine';
 
 /**
  * AI Planner Service - Intelligent task selection based on energy and priority.
  */
 export const AIPlannerService = {
-  async getDailyRecommendations(currentEnergy: number): Promise<Suggestion[]> {
+  async getDailyRecommendations(currentEnergy: number): Promise<FocusRecommendation[]> {
     const tasks = await TaskService.getActiveTasks();
     const pending = tasks.filter((t: any) => t.status === 'pending');
     
@@ -33,9 +28,10 @@ export const AIPlannerService = {
     });
 
     return sorted.slice(0, 3).map(t => ({
+      type: 'task',
+      id: t.id,
       title: t.title,
-      reason: this.getReason(t, currentEnergy),
-      type: t.priority === 3 ? 'focus' : 'quick'
+      reason: this.getReason(t, currentEnergy)
     }));
   },
 

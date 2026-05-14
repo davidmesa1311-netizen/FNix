@@ -7,8 +7,7 @@ import {
   Plus,
   Share2,
   Cloud,
-  Download,
-  Calendar as CalendarIcon
+  Download
 } from 'lucide-react';
 import { supabase } from '../db/db';
 import './Calendario.css';
