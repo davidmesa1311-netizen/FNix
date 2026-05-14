@@ -1,5 +1,5 @@
 import { TaskService } from './TaskService';
-import { FocusRecommendation } from '../lib/focusEngine';
+import type { FocusRecommendation } from '../lib/focusEngine';
 
 /**
  * AI Planner Service - Intelligent task selection based on energy and priority.

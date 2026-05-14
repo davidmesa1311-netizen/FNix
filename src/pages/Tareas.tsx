@@ -3,7 +3,6 @@ import {
   Plus, 
   Circle, 
   CheckCircle2,
-  Tag,
   Calendar,
   Flag,
   Trash2,
