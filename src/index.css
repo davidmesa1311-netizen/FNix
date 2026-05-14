@@ -1,0 +1,301 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  /* Spacing System (8px rule) */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+
+  /* Colors - Premium Slate & Emotional Blue Palette */
+  --hue-slate: 215;
+  --bg-primary: var(--hue-slate) 20% 99%;
+  --bg-secondary: var(--hue-slate) 15% 96%;
+  --bg-tertiary: var(--hue-slate) 15% 92%;
+  --text-primary: var(--hue-slate) 30% 15%;
+  --text-secondary: var(--hue-slate) 15% 40%;
+  --text-muted: var(--hue-slate) 10% 55%;
+  
+  --hue-brand: 195;
+  --brand: var(--hue-brand) 85% 50%;
+  --brand-soft: var(--hue-brand) 80% 94%;
+  --brand-deep: var(--hue-brand) 90% 40%;
+  
+  --accent-orange: 12 90% 55%;
+  --accent-orange-soft: 12 90% 92%;
+
+  --success: 155 60% 45%;
+  --warning: 40 90% 50%;
+  --danger: 350 80% 55%;
+  
+  --border: var(--hue-slate) 15% 88%;
+  --shadow-sm: 0 2px 8px hsla(var(--hue-slate), 30%, 10%, 0.03);
+  --shadow-md: 0 10px 30px -5px hsla(var(--hue-slate), 30%, 10%, 0.06);
+  --shadow-lg: 0 20px 40px -10px hsla(var(--hue-slate), 30%, 10%, 0.1);
+
+  /* Typography Scale */
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.875rem;
+  --fs-base: 1rem;
+  --fs-md: 1.125rem;
+  --fs-lg: 1.5rem;
+  --fs-xl: 2rem;
+  --fs-2xl: 3rem;
+
+  /* Surface & Glassmorphism */
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-lg: 32px;
+  --radius-full: 9999px;
+
+  --font-main: 'Plus Jakarta Sans', sans-serif;
+}
+
+[data-theme='dark'] {
+  /* Deep Premium Slate for Dark Mode */
+  --bg-primary: var(--hue-slate) 25% 6%;
+  --bg-secondary: var(--hue-slate) 20% 9%;
+  --bg-tertiary: var(--hue-slate) 15% 12%;
+  
+  --text-primary: var(--hue-slate) 10% 95%;
+  --text-secondary: var(--hue-slate) 10% 70%;
+  --text-muted: var(--hue-slate) 10% 50%;
+  
+  --brand-soft: var(--hue-brand) 80% 12%;
+  --accent-orange-soft: 12 90% 12%;
+  
+  --border: var(--hue-slate) 20% 14%;
+  
+  --shadow-md: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 20px 50px -10px rgba(0, 0, 0, 0.7);
+}
+
+/* Reset & Base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background-color: hsl(var(--bg-primary));
+  color: hsl(var(--text-primary));
+  font-family: var(--font-main);
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+  overflow-x: hidden;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* Typography Hierarchy */
+h1, h2, h3 { 
+  font-weight: 800; 
+  letter-spacing: -0.03em; 
+  color: hsl(var(--text-primary));
+}
+h1 { font-size: var(--fs-xl); line-height: 1.1; }
+h2 { font-size: var(--fs-lg); line-height: 1.2; }
+h3 { font-size: var(--fs-md); line-height: 1.3; }
+p  { font-size: var(--fs-base); color: hsl(var(--text-secondary)); }
+
+/* Interactive Elements */
+button {
+  cursor: pointer;
+  font-family: inherit;
+  border: none;
+  background: none;
+  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  font-weight: 700;
+}
+
+button:active {
+  transform: scale(0.97);
+}
+
+/* Button Variants - Consistent & Smooth */
+.btn-primary {
+  background-color: hsl(var(--brand));
+  color: white;
+  padding: 12px 28px;
+  border-radius: var(--radius-full);
+  box-shadow: 0 8px 20px -4px hsla(var(--hue-brand), 85%, 50%, 0.4);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: hsl(var(--brand-deep));
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 12px 28px -6px hsla(var(--hue-brand), 85%, 50%, 0.5);
+}
+
+.btn-secondary {
+  background-color: hsl(var(--brand-soft));
+  color: hsl(var(--brand));
+  padding: 12px 28px;
+  border-radius: var(--radius-full);
+  border: 1px solid hsla(var(--hue-brand), 85%, 50%, 0.1);
+}
+
+.btn-secondary:hover {
+  background-color: hsla(var(--hue-brand), 85%, 50%, 0.1);
+}
+
+.btn-ghost {
+  color: hsl(var(--text-secondary));
+  padding: 10px 20px;
+  border-radius: var(--radius-full);
+}
+
+.btn-ghost:hover {
+  background-color: hsla(var(--hue-slate), 15%, 50%, 0.05);
+  color: hsl(var(--text-primary));
+}
+
+.btn-ghost.active {
+  background-color: hsla(var(--hue-brand), 85%, 50%, 0.1);
+  color: hsl(var(--brand));
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: hsl(var(--border)); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: hsl(var(--text-muted)); }
+
+/* Mobile Utilities */
+@media (max-width: 768px) {
+  :root {
+    --fs-xl: 1.75rem;
+    --fs-2xl: 2.25rem;
+  }
+}
+
+/* Global Premium Utilities */
+.view-header {
+  margin-bottom: var(--space-xl);
+}
+
+.view-header h1 {
+  margin-bottom: var(--space-xs);
+}
+
+.premium-card {
+  background-color: hsl(var(--bg-secondary));
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  border: 1px solid hsl(var(--border));
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.premium-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: hsla(var(--hue-brand), 50%, 80%, 0.5);
+}
+
+.creator-card {
+  background-color: hsl(var(--bg-primary));
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  border: 1px solid hsla(var(--hue-brand), 50%, 80%, 0.5);
+  box-shadow: var(--shadow-md);
+  margin-bottom: var(--space-2xl);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle glow behind creator cards - Now Blue Dominant */
+.creator-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, hsl(var(--brand)), hsl(var(--accent-orange)));
+  opacity: 0.8;
+}
+
+.creator-title-input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-size: var(--fs-lg);
+  font-weight: 800;
+  color: hsl(var(--text-primary));
+  outline: none;
+  padding: var(--space-sm) 0;
+  letter-spacing: -0.02em;
+}
+
+.creator-title-input::placeholder {
+  opacity: 0.3;
+}
+
+.input-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: hsl(var(--text-muted));
+  margin-bottom: var(--space-sm);
+  letter-spacing: 0.05em;
+}
+
+.btn-fab {
+  position: fixed;
+  bottom: 100px;
+  right: var(--space-lg);
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-full);
+  background-color: hsl(var(--brand));
+  color: white;
+  box-shadow: 0 12px 32px hsla(var(--hue-brand), 80%, 50%, 0.3);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 769px) {
+  .btn-fab {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: var(--space-md) var(--space-xl);
+    border-radius: var(--radius-md);
+    box-shadow: 0 8px 24px hsla(var(--hue-brand), 80%, 50%, 0.2);
+  }
+}
+
+.icon-accent {
+  color: hsl(var(--brand)); /* Now Primary Blue */
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

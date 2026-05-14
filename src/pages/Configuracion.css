@@ -1,0 +1,136 @@
+.config-view {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--space-lg);
+  padding-bottom: 100px;
+}
+
+.save-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-md);
+  background-color: hsla(var(--success), 0.1);
+  color: hsl(var(--success));
+  border-radius: var(--radius-full);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+}
+
+.config-section-premium {
+  background-color: hsl(var(--bg-secondary));
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  border: 1px solid hsl(var(--border));
+  margin-bottom: var(--space-lg);
+  transition: all 0.2s ease;
+}
+
+.config-section-premium:hover {
+  border-color: hsl(var(--brand-soft));
+}
+
+.section-title-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.section-icon-bg {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background-color: hsl(var(--brand-soft));
+  color: hsl(var(--brand));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.section-title-row h2 {
+  font-size: var(--fs-base);
+}
+
+.cloud-status-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.cloud-status-card p {
+  font-size: var(--fs-sm);
+}
+
+.status-badge-cloud {
+  padding: var(--space-xs) var(--space-md);
+  background-color: hsla(var(--success), 0.1);
+  color: hsl(var(--success));
+  border-radius: var(--radius-full);
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.config-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.config-item-premium {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-xl);
+}
+
+.config-info label {
+  font-weight: 600;
+  color: hsl(var(--text-primary));
+  display: block;
+  margin-bottom: 2px;
+}
+
+.config-info span {
+  font-size: var(--fs-xs);
+  color: hsl(var(--text-muted));
+}
+
+.slider-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  min-width: 200px;
+}
+
+.slider-group input[type="range"] {
+  flex: 1;
+  accent-color: hsl(var(--brand));
+  height: 6px;
+}
+
+.value-badge {
+  font-size: var(--fs-sm);
+  font-weight: 800;
+  color: hsl(var(--brand));
+  min-width: 40px;
+  text-align: right;
+}
+
+@media (max-width: 600px) {
+  .config-item-premium {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .slider-group {
+    width: 100%;
+    min-width: 0;
+  }
+  .cloud-status-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

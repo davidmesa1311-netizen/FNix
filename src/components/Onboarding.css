@@ -1,0 +1,71 @@
+.onboarding-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: hsl(var(--bg-primary));
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xl);
+}
+
+.onboarding-card {
+  background-color: hsl(var(--bg-secondary));
+  padding: var(--space-2xl);
+  border-radius: var(--radius-2xl);
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xl);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid hsl(var(--border));
+}
+
+.onboarding-icon {
+  width: 100px;
+  height: 100px;
+  background-color: hsl(var(--brand-soft));
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: hsl(var(--brand));
+  margin-bottom: var(--space-md);
+}
+
+.onboarding-card h2 {
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.onboarding-card p {
+  color: hsl(var(--text-secondary));
+  font-size: var(--fs-base);
+  line-height: 1.6;
+}
+
+.onboarding-progress {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.onboarding-progress .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background-color: hsl(var(--bg-tertiary));
+  transition: all 0.3s ease;
+}
+
+.onboarding-progress .dot.active {
+  width: 24px;
+  background-color: hsl(var(--brand));
+}
+
+.full-width {
+  width: 100%;
+}

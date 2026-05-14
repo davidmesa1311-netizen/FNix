@@ -1,0 +1,225 @@
+.calendario-view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  padding-bottom: 80px;
+}
+
+.calendar-strip {
+  background-color: hsl(var(--bg-secondary));
+  padding: var(--space-lg);
+  border-radius: var(--radius-lg);
+  border: 1px solid hsl(var(--border));
+}
+
+.strip-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-lg);
+}
+
+.days-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--space-xs);
+}
+
+.day-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-md) 0;
+  border-radius: var(--radius-md);
+  gap: 4px;
+}
+
+.day-cell.today {
+  background-color: hsl(var(--brand));
+  color: white;
+}
+
+.day-name {
+  font-size: 10px;
+  font-weight: 700;
+  opacity: 0.6;
+}
+
+.day-num {
+  font-weight: 700;
+  font-size: var(--fs-base);
+}
+
+.agenda-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+
+.events-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.event-card {
+  background-color: hsl(var(--bg-secondary));
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-md);
+  border: 1px solid hsl(var(--border));
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+.event-time {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-size: 10px;
+  font-weight: 700;
+  color: hsl(var(--brand));
+  min-width: 50px;
+}
+
+.event-content {
+  flex: 1;
+}
+
+.event-content h3 {
+  font-size: var(--fs-base);
+}
+
+.event-date-sub {
+  font-size: var(--fs-xs);
+  color: hsl(var(--text-muted));
+}
+
+.icon-alert {
+  color: hsl(var(--warning));
+}
+
+/* Sync Hub Card */
+.sync-hub-card {
+  background-color: hsl(var(--bg-secondary));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  margin-bottom: var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  box-shadow: var(--shadow-md);
+}
+
+.sync-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.sync-info h3 {
+  font-size: var(--fs-md);
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.sync-info p {
+  font-size: var(--fs-sm);
+  color: hsl(var(--text-muted));
+}
+
+.sync-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: hsl(var(--text-muted));
+  background-color: hsl(var(--bg-tertiary));
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: hsl(var(--text-muted));
+}
+
+.status-dot.active {
+  background-color: hsl(var(--success));
+  box-shadow: 0 0 10px hsla(var(--success-hue), 80%, 50%, 0.4);
+}
+
+.sync-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+}
+
+.sync-option {
+  background-color: hsl(var(--bg-primary));
+  padding: var(--space-lg);
+  border-radius: var(--radius-md);
+  border: 1px solid hsl(var(--border));
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.option-brand {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 20px;
+  color: white;
+}
+
+.option-brand.google { background-color: #4285F4; }
+.option-brand.outlook { background-color: #0078D4; }
+
+.option-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.option-text strong {
+  font-size: var(--fs-sm);
+}
+
+.option-text span {
+  font-size: 10px;
+  color: hsl(var(--text-muted));
+}
+
+.sync-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: var(--space-md);
+  border-top: 1px solid hsl(var(--border));
+}
+
+.ics-export {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: var(--fs-xs);
+  color: hsl(var(--text-muted));
+}
+
+@media (max-width: 768px) {
+  .sync-grid {
+    grid-template-columns: 1fr;
+  }
+}

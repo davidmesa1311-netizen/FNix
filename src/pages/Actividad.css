@@ -1,0 +1,115 @@
+.actividad-view {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--space-lg);
+  padding-bottom: 100px;
+}
+
+.filter-scroll {
+  margin-bottom: var(--space-xl);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.filter-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Timeline */
+.activity-timeline {
+  display: flex;
+  flex-direction: column;
+}
+
+.activity-item-premium {
+  display: flex;
+  gap: var(--space-lg);
+  padding: var(--space-md) 0;
+}
+
+.activity-icon-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+
+.activity-line {
+  width: 2px;
+  flex: 1;
+  background-color: hsl(var(--border));
+  min-height: 24px;
+}
+
+.icon-brand { color: hsl(var(--brand)); }
+.icon-success { color: hsl(var(--success)); }
+.icon-danger { color: hsl(var(--danger)); }
+.icon-warning { color: hsl(var(--warning)); }
+
+.activity-content {
+  flex: 1;
+  background-color: hsl(var(--bg-secondary));
+  border-radius: var(--radius-md);
+  padding: var(--space-md) var(--space-lg);
+  border: 1px solid hsl(var(--border));
+  transition: all 0.2s ease;
+}
+
+.activity-content:hover {
+  background-color: hsl(var(--bg-tertiary));
+  border-color: hsl(var(--brand-soft));
+}
+
+.activity-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-md);
+}
+
+.activity-action {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: hsl(var(--text-primary));
+}
+
+.activity-time {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--fs-xs);
+  color: hsl(var(--text-muted));
+  white-space: nowrap;
+}
+
+.activity-date {
+  font-size: var(--fs-xs);
+  color: hsl(var(--text-muted));
+  margin-top: 4px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: var(--space-2xl) var(--space-lg);
+  background: hsl(var(--bg-secondary));
+  border-radius: var(--radius-lg);
+  border: 2px dashed hsl(var(--border));
+  color: hsl(var(--text-muted));
+}
+
+.empty-state h2 {
+  margin-top: var(--space-md);
+  margin-bottom: var(--space-sm);
+  color: hsl(var(--text-primary));
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-2xl);
+  color: hsl(var(--text-muted));
+}

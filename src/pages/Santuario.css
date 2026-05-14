@@ -1,0 +1,173 @@
+.santuario-view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+}
+
+.breathing-card {
+  background-color: hsl(var(--bg-secondary));
+  border-radius: var(--radius-lg);
+  border: 1px solid hsl(var(--border));
+  padding: var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  overflow: hidden;
+}
+
+.breathing-card .card-content {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+.icon-circle {
+  width: 64px;
+  height: 64px;
+  background-color: hsla(var(--hue-brand), 85%, 50%, 0.1);
+  color: hsl(var(--brand));
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.text-info h2 {
+  font-size: var(--fs-md);
+  margin-bottom: 4px;
+}
+
+.text-info p {
+  color: hsl(var(--text-secondary));
+  font-size: var(--fs-sm);
+}
+
+.btn-breathing {
+  margin-left: auto;
+  background-color: hsl(var(--brand));
+  color: white;
+  padding: 10px 24px;
+  border-radius: var(--radius-full);
+  font-weight: 700;
+  transition: all 0.3s ease;
+}
+
+.btn-breathing.active {
+  background-color: hsl(var(--bg-tertiary));
+  color: hsl(var(--text-primary));
+}
+
+.breathing-animation-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+  padding: var(--space-xl) 0;
+}
+
+.breathing-circle {
+  width: 100px;
+  height: 100px;
+  background-color: hsla(var(--hue-brand), 85%, 50%, 0.2);
+  border-radius: var(--radius-full);
+  animation: breathe-main 8s ease-in-out infinite;
+  box-shadow: 0 0 40px hsla(var(--hue-brand), 85%, 50%, 0.2);
+}
+
+@keyframes breathe-main {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.8); background-color: hsla(var(--hue-brand), 85%, 50%, 0.4); }
+}
+
+.breathing-text {
+  font-weight: 700;
+  color: hsl(var(--brand));
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: var(--fs-xs);
+}
+
+/* Meditation Grid */
+.meditation-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-md);
+  margin-top: var(--space-md);
+}
+
+.meditation-item {
+  background-color: hsl(var(--bg-secondary));
+  padding: var(--space-lg);
+  border-radius: var(--radius-md);
+  border: 1px solid hsl(var(--border));
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  transition: transform 0.2s ease;
+}
+
+.meditation-item:hover {
+  transform: translateY(-4px);
+}
+
+.med-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.meditation-item.blue .med-icon { background-color: #E0F2FE; color: #0369A1; }
+.meditation-item.orange .med-icon { background-color: #FFEDD5; color: #C2410C; }
+.meditation-item.purple .med-icon { background-color: #F3E8FF; color: #7E22CE; }
+.meditation-item.navy .med-icon { background-color: #DBEAFE; color: #1E40AF; }
+
+.med-info {
+  flex: 1;
+}
+
+.med-info h3 {
+  font-size: var(--fs-base);
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.med-info span {
+  font-size: var(--fs-xs);
+  color: hsl(var(--text-muted));
+}
+
+.btn-play-mini {
+  color: hsl(var(--text-muted));
+  transition: color 0.2s ease;
+}
+
+.meditation-item:hover .btn-play-mini {
+  color: hsl(var(--brand));
+}
+
+/* Stress Card */
+.stress-card {
+  background-color: hsl(var(--bg-secondary));
+  padding: var(--space-xl);
+  border-radius: var(--radius-md);
+  border: 1px solid hsl(var(--border));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.stress-bar {
+  height: 8px;
+  background-color: hsl(var(--bg-tertiary));
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.stress-bar .fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10B981, #F59E0B, #EF4444);
+  background-size: 400% 100%;
+}

@@ -1,0 +1,209 @@
+.zen-focus-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: hsl(var(--bg-primary));
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-xl);
+  color: hsl(var(--text-primary));
+  transition: background-color 1s ease;
+}
+
+[data-theme='dark'] .zen-focus-overlay {
+  background-color: hsl(var(--hue-slate), 25%, 3%); /* Deeper for total focus */
+}
+
+.zen-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.zen-mode-badge {
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: hsl(var(--brand));
+  background-color: hsla(var(--hue-brand), 85%, 50%, 0.1);
+  padding: 6px 16px;
+  border-radius: var(--radius-full);
+}
+
+.zen-actions {
+  display: flex;
+  gap: var(--space-md);
+}
+
+.btn-icon-zen {
+  color: hsl(var(--text-muted));
+  transition: color 0.2s ease;
+}
+
+.btn-icon-zen:hover {
+  color: hsl(var(--brand));
+}
+
+.zen-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3xl);
+}
+
+.timer-container {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.timer-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.timer-bg {
+  fill: none;
+  stroke: hsla(var(--hue-brand), 85%, 50%, 0.05);
+  stroke-width: 4;
+}
+
+.timer-progress {
+  fill: none;
+  stroke: hsl(var(--brand));
+  stroke-width: 4;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.5s ease;
+}
+
+.timer-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.time-numbers {
+  font-size: 100px;
+  font-weight: 200;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  font-family: inherit;
+}
+
+.time-label {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: hsl(var(--text-muted));
+  text-transform: uppercase;
+  margin-top: var(--space-sm);
+}
+
+/* Logo Breathing Animation */
+.phoenix-breathing {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+}
+
+.breathing-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0.5;
+}
+
+.phoenix-breathing.active .breathing-logo {
+  animation: breathe 8s cubic-bezier(0.445, 0.05, 0.55, 0.95) infinite;
+  opacity: 1;
+  filter: drop-shadow(0 0 20px hsla(var(--hue-brand), 85%, 50%, 0.2));
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.15); opacity: 1; }
+}
+
+.timer-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xl);
+}
+
+.btn-main-zen {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-full);
+  background-color: hsl(var(--brand));
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 15px 30px hsla(var(--hue-brand), 85%, 50%, 0.3);
+  transition: transform 0.2s ease;
+}
+
+.btn-main-zen:hover {
+  transform: scale(1.05);
+}
+
+.btn-secondary-zen {
+  color: hsl(var(--text-muted));
+  transition: all 0.2s ease;
+}
+
+.btn-secondary-zen:hover {
+  color: hsl(var(--brand));
+  transform: rotate(-15deg);
+}
+
+/* Reward Overlay */
+.reward-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: hsla(var(--hue-brand), 25%, 8%, 0.95);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xl);
+}
+
+.reward-card {
+  background-color: hsl(var(--bg-secondary));
+  padding: var(--space-3xl);
+  border-radius: var(--radius-lg);
+  border: 1px solid hsla(var(--hue-brand), 85%, 50%, 0.2);
+  text-align: center;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xl);
+  box-shadow: 0 40px 100px rgba(0,0,0,0.5);
+}
+
+.icon-trophy {
+  color: hsl(45 100% 50%);
+  filter: drop-shadow(0 0 15px hsla(45, 100%, 50%, 0.4));
+}
