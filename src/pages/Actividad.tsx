@@ -5,7 +5,8 @@ import {
   CheckCircle2, 
   Trash2, 
   RefreshCw,
-  Clock
+  Clock,
+  Filter
 } from 'lucide-react';
 import { ActivityService } from '../services/ActivityService';
 import './Actividad.css';
@@ -13,21 +14,14 @@ import './Actividad.css';
 const Actividad: React.FC = () => {
   const [logs, setLogs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeFilter, setActiveFilter] = useState('all');
 
-  const filters = [
-    { id: 'all', label: 'Todos', icon: null },
-    { id: 'task', label: 'Tareas', entity: 'task' },
-    { id: 'goal', label: 'Metas', entity: 'goal' },
-    { id: 'complete', label: 'Completados', action: 'complete' },
-    { id: 'delete', label: 'Eliminados', action: 'delete' },
-  ];
+  useEffect(() => {
+    loadActivity();
+  }, []);
 
-  const loadActivity = async (filterId: string) => {
-    setLoading(true);
-    const filter = filters.find(f => f.id === filterId);
+  const loadActivity = async () => {
     try {
-      const data = await ActivityService.getRecentActivity(50, filter?.action, filter?.entity);
+      const data = await ActivityService.getRecentActivity(50);
       setLogs(data);
     } catch (err) {
       console.error(err);
@@ -36,69 +30,58 @@ const Actividad: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    loadActivity(activeFilter);
-  }, [activeFilter]);
-
   const getIcon = (action: string) => {
     switch (action) {
-      case 'create': return <PlusCircle size={18} className="icon-brand" />;
-      case 'complete': return <CheckCircle2 size={18} className="icon-success" />;
-      case 'delete': return <Trash2 size={18} className="icon-danger" />;
-      case 'reopen': return <RefreshCw size={18} className="icon-warning" />;
-      default: return <History size={18} />;
+      case 'create': return <PlusCircle size={20} style={{ color: 'hsl(var(--brand))' }} />;
+      case 'complete': return <CheckCircle2 size={20} style={{ color: 'hsl(var(--success))' }} />;
+      case 'delete': return <Trash2 size={20} style={{ color: 'hsl(var(--danger))' }} />;
+      case 'reopen': return <RefreshCw size={20} style={{ color: 'hsl(var(--warning))' }} />;
+      default: return <History size={20} />;
     }
   };
 
   return (
-    <div className="actividad-view animate-fade-in">
+    <div className="actividad-view animate-fade">
       <header className="view-header">
-        <div className="header-info">
+        <div>
           <h1>Registro de Actividad</h1>
-          <p>Historial de cambios y auditoría del sistema.</p>
+          <p className="subtitle">Línea de tiempo de tus decisiones y progresos.</p>
         </div>
+        <button className="btn-ghost" onClick={loadActivity}>
+          <RefreshCw size={18} />
+          <span>Refrescar</span>
+        </button>
       </header>
-
-      <div className="filter-scroll">
-        <div className="category-chips">
-          {filters.map(f => (
-            <button 
-              key={f.id} 
-              className={`category-chip ${activeFilter === f.id ? 'active' : ''}`}
-              onClick={() => setActiveFilter(f.id)}
-            >
-              {f.label}
-            </button>
-          ))}
-        </div>
-      </div>
 
       <div className="activity-timeline">
         {loading ? (
-          <div className="loading-state">Consultando el registro de auditoría...</div>
+          <div className="loading-state">Auditando registros...</div>
         ) : logs.length === 0 ? (
           <div className="empty-state">
-            <History size={64} strokeWidth={1} />
-            <h2>Sin actividad</h2>
-            <p>No hay registros que coincidan con el filtro seleccionado.</p>
+            <History size={48} />
+            <p>Aún no hay actividad registrada.</p>
           </div>
         ) : (
           logs.map((log, i) => (
-            <div key={log.id} className="activity-item-premium">
-              <div className="activity-icon-container">
-                {getIcon(log.action)}
-                {i !== logs.length - 1 && <div className="activity-line"></div>}
+            <div key={log.id} className="activity-item animate-fade" style={{ animationDelay: `${i * 0.05}s` }}>
+              <div className="timeline-connector">
+                <div className="timeline-icon">
+                  {getIcon(log.action)}
+                </div>
+                {i !== logs.length - 1 && <div className="timeline-line"></div>}
               </div>
-              <div className="activity-content">
+              
+              <div className="premium-card activity-content-card">
                 <div className="activity-header">
-                  <span className="activity-action">{log.details}</span>
-                  <span className="activity-time">
+                  <span className="activity-details">{log.details}</span>
+                  <span className="activity-meta">
                     <Clock size={12} />
                     {new Date(log.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </span>
                 </div>
-                <div className="activity-date">
-                  {new Date(log.created_at).toLocaleDateString()}
+                <div className="activity-footer">
+                  <span className="entity-badge">{log.entity_type}</span>
+                  <span className="date-stamp">{new Date(log.created_at).toLocaleDateString()}</span>
                 </div>
               </div>
             </div>

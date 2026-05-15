@@ -1,47 +1,79 @@
-import { TaskRepository, generateUUID } from '../db/repository';
+import { supabase } from '../lib/supabase';
 import { ActivityService } from './ActivityService';
 
-/**
- * Servicio de Tareas (Capa de Lógica de Negocio)
- */
+export interface Task {
+  id: number;
+  uuid: string;
+  title: string;
+  priority: number;
+  category: string;
+  status: 'pending' | 'completed';
+  due_date: string;
+  is_deleted: boolean;
+  created_at: string;
+}
+
 export const TaskService = {
-  async getActiveTasks() {
-    return await TaskRepository.getAll();
+  async getActiveTasks(): Promise<Task[]> {
+    const { data, error } = await supabase
+      .from('tasks')
+      .select('*')
+      .eq('is_deleted', false)
+      .order('priority', { ascending: false })
+      .order('created_at', { ascending: false });
+    
+    if (error) throw error;
+    return data || [];
   },
 
-  async addTask(title: string, priority: number = 1, category: string = 'General', goalId?: number, dueDate?: string, cognitiveLoad: string = 'media') {
-    if (!title.trim()) throw new Error('El título de la tarea es obligatorio.');
+  async addTask(title: string, priority: number = 1, category: string = 'General', dueDate?: string) {
+    if (!title.trim()) throw new Error('El título es obligatorio.');
     
-    const uuid = generateUUID();
+    const uuid = crypto.randomUUID();
     const newTask = {
-      uuid, 
-      title, 
-      priority, 
-      category, 
-      goal_id: goalId, 
+      uuid,
+      title,
+      priority,
+      category,
       status: 'pending',
-      due_date: dueDate || new Date().toISOString().split('T')[0],
-      cognitive_load: cognitiveLoad
+      due_date: dueDate || new Date().toISOString().split('T')[0]
     };
 
-    const result = await TaskRepository.save(newTask);
+    const { data, error } = await supabase.from('tasks').insert(newTask).select().single();
+    if (error) throw error;
+
     await ActivityService.log('create', 'task', uuid, `Tarea creada: ${title}`);
-    return result;
+    return data;
   },
 
-  async toggleTaskStatus(task: any) {
+  async toggleTaskStatus(task: Task) {
     const nextStatus = task.status === 'pending' ? 'completed' : 'pending';
-    const result = await TaskRepository.save({ ...task, status: nextStatus });
+    const { data, error } = await supabase
+      .from('tasks')
+      .update({ status: nextStatus, updated_at: new Date().toISOString() })
+      .eq('id', task.id)
+      .select()
+      .single();
+    
+    if (error) throw error;
+
     await ActivityService.log(
       nextStatus === 'completed' ? 'complete' : 'reopen', 
-      'task', task.uuid, `Tarea ${nextStatus}: ${task.title}`
+      'task', 
+      task.uuid, 
+      `Tarea ${nextStatus}: ${task.title}`
     );
-    return result;
+    return data;
   },
 
-  async removeTask(id: number, taskUuid: string, taskTitle: string) {
-    const result = await TaskRepository.delete(id);
-    await ActivityService.log('delete', 'task', taskUuid, `Tarea eliminada: ${taskTitle}`);
-    return result;
+  async removeTask(task: Task) {
+    const { error } = await supabase
+      .from('tasks')
+      .update({ is_deleted: true, updated_at: new Date().toISOString() })
+      .eq('id', task.id);
+    
+    if (error) throw error;
+
+    await ActivityService.log('delete', 'task', task.uuid, `Tarea eliminada: ${task.title}`);
   }
 };

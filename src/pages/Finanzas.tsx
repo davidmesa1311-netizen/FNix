@@ -5,195 +5,174 @@ import {
   Trash2, 
   Calendar, 
   DollarSign,
-  ArrowUpRight
+  ArrowUpRight,
+  TrendingUp,
+  AlertCircle
 } from 'lucide-react';
-import { supabase } from '../db/db';
+import { FinanceService } from '../services/FinanceService';
+import type { FinanceRecord } from '../services/FinanceService';
 import './Finanzas.css';
 
-interface Payment {
-  id: number;
-  title: string;
-  amount: number;
-  due_day: number;
-  status: string;
-}
-
 const Finanzas: React.FC = () => {
-  const [payments, setPayments] = useState<Payment[]>([]);
-  const [totalNeeded, setTotalNeeded] = useState(0);
-  const [isAdding, setIsAdding] = useState(false);
+  const [records, setRecords] = useState<FinanceRecord[]>([]);
   const [loading, setLoading] = useState(true);
-
-  // Form State
-  const [newTitle, setNewTitle] = useState('');
-  const [newAmount, setNewAmount] = useState('');
-  const [newDueDay, setNewDueDay] = useState('1');
-
-  const loadFinances = async () => {
-    setLoading(true);
-    try {
-      const { data } = await supabase
-        .from('monthly_payments')
-        .select('*')
-        .order('due_day', { ascending: true });
-      
-      const mapped = (data || []).map((p: any) => ({
-        id: p.id, 
-        title: p.title, 
-        amount: Number(p.amount), 
-        due_day: p.due_day, 
-        status: p.status
-      }));
-      setPayments(mapped);
-      
-      const total = mapped.reduce((acc: number, curr: any) => acc + curr.amount, 0);
-      setTotalNeeded(total);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [isCreatorOpen, setCreatorOpen] = useState(false);
+  
+  const [newDesc, setNewDesc] = useState('');
+  const [newAmount, setNewAmount] = useState<number>(0);
+  const [newDay, setNewDay] = useState<number>(1);
+  const [newCategory, setNewCategory] = useState('Servicios');
 
   useEffect(() => {
     loadFinances();
   }, []);
 
-  const handleAddPayment = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newTitle.trim() || !newAmount) return;
-
-    await supabase
-      .from('monthly_payments')
-      .insert({ 
-        title: newTitle, 
-        amount: parseFloat(newAmount), 
-        due_day: parseInt(newDueDay) 
-      });
-
-    setNewTitle('');
-    setNewAmount('');
-    setNewDueDay('1');
-    setIsAdding(false);
-    loadFinances();
-  };
-
-  const handleDeletePayment = async (id: number, title: string) => {
-    if (window.confirm(`¿Eliminar el pago de "${title}"?`)) {
-      await supabase.from('monthly_payments').delete().eq('id', id);
-      loadFinances();
+  const loadFinances = async () => {
+    try {
+      const data = await FinanceService.getAll();
+      setRecords(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
+  const handleAdd = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newDesc.trim() || newAmount <= 0) return;
+    try {
+      await FinanceService.addRecord(newDesc, newAmount, newCategory, newDay);
+      setNewDesc('');
+      setNewAmount(0);
+      setCreatorOpen(false);
+      loadFinances();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    if (!confirm('¿Eliminar este registro?')) return;
+    try {
+      await FinanceService.deleteRecord(id);
+      loadFinances();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const totalMonthly = records.reduce((acc, curr) => acc + curr.amount, 0);
+
   return (
-    <div className="finanzas-view animate-fade-in">
+    <div className="finanzas-view animate-fade">
       <header className="view-header">
-        <div className="header-info">
-          <h1>Finanzas Mensuales</h1>
-          <p>Visualiza tus compromisos económicos del mes.</p>
+        <div>
+          <h1>Presupuesto Mensual</h1>
+          <p className="subtitle">Controla tus flujos para liberar recursos mentales.</p>
         </div>
-        {!isAdding && (
-          <button onClick={() => setIsAdding(true)} className="btn-fab">
-            <Plus size={20} />
-            <span>Añadir Pago</span>
+        {!isCreatorOpen && (
+          <button className="fab-button" onClick={() => setCreatorOpen(true)}>
+            <Plus size={24} />
+            <span>Nuevo Gasto</span>
           </button>
         )}
       </header>
 
-      <section className="finance-summary-card animate-slide-up">
-        <div className="summary-main">
-          <div className="summary-label">
-            <Wallet size={20} />
-            <span>Presupuesto Necesario</span>
+      <div className="finance-summary-grid">
+        <div className="premium-card summary-card main-sum">
+          <div className="sum-header">
+            <TrendingUp size={20} />
+            <span>Presupuesto Total</span>
           </div>
-          <div className="summary-value">
-            ${totalNeeded.toLocaleString('es-CO', { minimumFractionDigits: 0 })}
+          <div className="sum-value">
+            <span className="currency">$</span>
+            {totalMonthly.toLocaleString()}
           </div>
-          <div className="summary-badge">
-            <ArrowUpRight size={14} />
-            <span>{payments.length} obligaciones</span>
-          </div>
+          <p className="sum-desc">Monto proyectado para el mes actual.</p>
         </div>
-        <div className="summary-visual">
-          <div className="visual-circle"></div>
-        </div>
-      </section>
+      </div>
 
-      {isAdding && (
-        <div className="creator-card animate-slide-up">
-          <form onSubmit={handleAddPayment}>
-            <div className="input-group">
-              <span className="input-label">Descripción</span>
+      {isCreatorOpen && (
+        <div className="creator-card premium-card animate-fade">
+          <form onSubmit={handleAdd}>
+            <div className="finance-inputs">
               <input 
-                type="text" 
-                placeholder="Ej. Arriendo, Internet, Gimnasio..." 
-                value={newTitle} 
-                onChange={e => setNewTitle(e.target.value)}
-                className="creator-title-input"
                 autoFocus
+                className="creator-input desc-input"
+                placeholder="Descripción del gasto..."
+                value={newDesc}
+                onChange={(e) => setNewDesc(e.target.value)}
               />
+              <div className="amount-input-wrapper">
+                <span className="prefix">$</span>
+                <input 
+                  type="number"
+                  className="creator-input amount-input"
+                  placeholder="0.00"
+                  value={newAmount || ''}
+                  onChange={(e) => setNewAmount(Number(e.target.value))}
+                />
+              </div>
             </div>
             
-            <div className="finance-options">
-              <div className="option-item">
-                <span className="input-label"><DollarSign size={12} /> Monto</span>
+            <div className="finance-meta-inputs">
+              <div className="day-selector">
+                <span className="group-label">Día de cobro</span>
                 <input 
                   type="number" 
-                  placeholder="0.00" 
-                  value={newAmount} 
-                  onChange={e => setNewAmount(e.target.value)}
-                  className="finance-input"
+                  min="1" max="31" 
+                  value={newDay} 
+                  onChange={e => setNewDay(Number(e.target.value))} 
                 />
               </div>
-              <div className="option-item">
-                <span className="input-label"><Calendar size={12} /> Día de Pago</span>
-                <input 
-                  type="number" 
-                  min="1" max="31"
-                  value={newDueDay} 
-                  onChange={e => setNewDueDay(e.target.value)}
-                  className="finance-input"
-                />
+              <div className="category-select">
+                 <span className="group-label">Categoría</span>
+                 <select value={newCategory} onChange={e => setNewCategory(e.target.value)}>
+                    <option>Servicios</option>
+                    <option>Suscripciones</option>
+                    <option>Personal</option>
+                    <option>Ahorro</option>
+                 </select>
               </div>
             </div>
 
-            <div className="creator-actions">
-              <button type="button" onClick={() => setIsAdding(false)} className="btn-ghost">Cancelar</button>
-              <button type="submit" className="btn-primary" disabled={!newTitle.trim() || !newAmount}>Registrar Obligación</button>
+            <div className="creator-actions-footer">
+              <button type="button" className="btn-ghost" onClick={() => setCreatorOpen(false)}>Cancelar</button>
+              <button type="submit" className="btn-primary" disabled={!newDesc.trim()}>
+                <DollarSign size={16} />
+                Registrar
+              </button>
             </div>
           </form>
         </div>
       )}
 
-      <div className="payments-list-premium">
-        <div className="list-header">
-          <h2>Pagos del Mes</h2>
-        </div>
-        
+      <div className="records-list">
         {loading ? (
-          <div className="loading-state">Actualizando saldos...</div>
-        ) : payments.length === 0 ? (
+          <div className="loading-state">Calculando estados financieros...</div>
+        ) : records.length === 0 ? (
           <div className="empty-state">
-            <DollarSign size={64} strokeWidth={1} />
-            <p>No tienes pagos registrados para este periodo.</p>
+            <Wallet size={48} />
+            <p>No hay gastos registrados. ¡Excelente!</p>
           </div>
         ) : (
-          payments.map(p => (
-            <div key={p.id} className="payment-card-premium">
-              <div className="payment-day-badge">
-                <span className="day-num">{p.due_day}</span>
-                <span className="day-label">Día</span>
+          records.map(record => (
+            <div key={record.id} className="finance-card premium-card">
+              <div className="record-day">
+                 <span>Día</span>
+                 <strong>{record.due_day}</strong>
               </div>
-              <div className="payment-details">
-                <h3>{p.title}</h3>
-                <span className="payment-status">Mensual Recurrente</span>
+              <div className="record-main">
+                <h3 className="record-desc">{record.description}</h3>
+                <span className="record-cat">{record.category}</span>
               </div>
-              <div className="payment-amount-side">
-                <span className="amount-val">${p.amount.toLocaleString('es-CO')}</span>
-                <button onClick={() => handleDeletePayment(p.id, p.title)} className="payment-delete-btn">
-                  <Trash2 size={16} />
-                </button>
+              <div className="record-amount">
+                ${record.amount.toLocaleString()}
               </div>
+              <button className="delete-btn" onClick={() => handleDelete(record.id)}>
+                <Trash2 size={18} />
+              </button>
             </div>
           ))
         )}

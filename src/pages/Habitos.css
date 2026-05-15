@@ -1,137 +1,141 @@
 .habitos-view {
   max-width: 800px;
   margin: 0 auto;
-  padding: var(--space-lg);
-  padding-bottom: 100px;
 }
 
-.category-selector {
-  margin-bottom: var(--space-lg);
+.category-selector-group {
+  margin-bottom: var(--space-xl);
+}
+
+.group-label {
+  display: block;
+  font-size: 0.8rem;
+  color: hsl(var(--text-muted));
+  margin-bottom: var(--space-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .category-chips {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-sm);
-  margin-top: var(--space-xs);
 }
 
-.category-chip {
-  padding: var(--space-xs) var(--space-md);
-  border-radius: var(--radius-sm);
-  background: hsl(var(--bg-primary));
-  border: 1px solid hsl(var(--border));
-  font-size: var(--fs-xs);
+.cat-chip {
+  background: hsla(var(--text-primary), 0.03);
+  border: 1px solid hsla(var(--text-primary), 0.05);
   color: hsl(var(--text-secondary));
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
   display: flex;
   align-items: center;
-  gap: var(--space-xs);
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  font-weight: 500;
 }
 
-.category-chip.active {
-  background-color: hsl(var(--brand-soft));
-  border-color: hsl(var(--brand));
-  color: hsl(var(--brand-deep));
+.cat-chip:hover {
+  background: hsla(var(--text-primary), 0.08);
 }
 
-.creator-actions {
+.cat-chip.active {
+  background: hsla(var(--cat-color), 0.1);
+  border-color: hsla(var(--cat-color), 0.3);
+  color: var(--cat-color);
+}
+
+.creator-actions-footer {
   display: flex;
   justify-content: flex-end;
-  gap: var(--space-md);
-  padding-top: var(--space-md);
-  border-top: 1px solid hsl(var(--border));
+  gap: var(--space-sm);
 }
 
-/* Habits Grid & Cards */
+/* Habit Cards */
 .habits-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: var(--space-md);
 }
 
-.habit-card-premium {
-  background-color: hsl(var(--bg-secondary));
-  border-radius: var(--radius-md);
-  padding: var(--space-lg);
-  border: 1px solid hsl(var(--border));
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-}
-
-.habit-card-premium:hover {
-  transform: translateY(-2px);
-  background-color: hsl(var(--bg-tertiary));
-  border-color: hsl(var(--brand-soft));
-  box-shadow: var(--shadow-md);
-}
-
-.habit-card-premium.completed {
-  background-color: hsla(var(--success), 0.05);
-  border-color: hsla(var(--success), 0.2);
-}
-
-.habit-main {
+.habit-card {
   display: flex;
   align-items: center;
   gap: var(--space-lg);
+  padding: var(--space-md) var(--space-lg);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .habit-check-btn {
-  flex-shrink: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
 }
 
-.check-inner {
+.check-blob {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  background: hsla(var(--text-primary), 0.03);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: hsl(var(--text-muted));
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.check-inner.active {
-  color: hsl(var(--success));
+.check-blob.active {
+  background: linear-gradient(135deg, hsl(var(--success)), #10b981);
+  color: white;
   transform: scale(1.1);
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
 }
 
-.habit-content {
+.habit-info {
   flex: 1;
 }
 
-.habit-content h3 {
-  font-size: var(--fs-base);
+.habit-info h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
   margin-bottom: 2px;
-  color: hsl(var(--text-primary));
+  transition: color 0.3s;
 }
 
-.completed .habit-content h3 {
+.habit-card.completed h3 {
   color: hsl(var(--text-muted));
-  text-decoration: line-through;
 }
 
-.habit-category-tag {
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
+.habit-tag {
+  font-size: 0.75rem;
   color: hsl(var(--text-muted));
-  letter-spacing: 0.05em;
+  background: hsla(var(--text-primary), 0.05);
+  padding: 2px 8px;
+  border-radius: 4px;
 }
 
-.habit-delete-btn {
+.habit-actions {
   opacity: 0;
-  color: hsl(var(--text-muted));
-  padding: var(--space-xs);
-  transition: all 0.2s ease;
+  transition: opacity 0.2s;
 }
 
-.habit-card-premium:hover .habit-delete-btn {
+.habit-card:hover .habit-actions {
   opacity: 1;
 }
 
-.habit-delete-btn:hover {
-  color: hsl(var(--danger));
-  background: hsla(var(--danger), 0.1);
+.delete-btn {
+  background: none;
+  border: none;
+  color: hsl(var(--text-muted));
+  cursor: pointer;
+  padding: var(--space-sm);
   border-radius: var(--radius-sm);
 }
 
-@media (max-width: 600px) {
-  .habits-grid {
-    grid-template-columns: 1fr;
-  }
+.delete-btn:hover {
+  background: hsla(var(--danger), 0.1);
+  color: hsl(var(--danger));
 }

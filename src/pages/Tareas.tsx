@@ -3,292 +3,193 @@ import {
   Plus, 
   Circle, 
   CheckCircle2,
+  Tag,
   Calendar,
   Flag,
   Trash2,
-  Layout as BoardIcon,
-  List as ListIcon,
-  Brain
+  Sparkles,
+  ChevronDown
 } from 'lucide-react';
 import { TaskService } from '../services/TaskService';
+import type { Task } from '../services/TaskService';
 import './Tareas.css';
 
 const Tareas: React.FC = () => {
-  const [tasks, setTasks] = useState<any[]>([]);
-  const [isAdding, setIsAdding] = useState(false);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isCreatorOpen, setCreatorOpen] = useState(false);
   
-  // Form State
-  const [newTaskTitle, setNewTaskTitle] = useState('');
-  const [priority, setPriority] = useState(1);
-  const [category, setCategory] = useState('General');
-  const [cognitiveLoad, setCognitiveLoad] = useState('media');
-  const [dueDate, setDueDate] = useState(new Date().toISOString().split('T')[0]);
-  const [viewMode, setViewMode] = useState<'list' | 'board'>('list');
-
-  const loadTasks = async () => {
-    try {
-      const data = await TaskService.getActiveTasks();
-      // Sort: Pending first, then by priority (desc), then by created_at (desc)
-      const sorted = [...data].sort((a, b) => {
-        if (a.status !== b.status) return a.status === 'pending' ? -1 : 1;
-        if (a.priority !== b.priority) return b.priority - a.priority;
-        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-      });
-      setTasks(sorted);
-    } catch (err) {
-      console.error('Error cargando tareas:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // New task form state
+  const [newTitle, setNewTitle] = useState('');
+  const [newPriority, setNewPriority] = useState(1);
+  const [newCategory, setNewCategory] = useState('Personal');
+  const [newDueDate, setNewDueDate] = useState(new Date().toISOString().split('T')[0]);
 
   useEffect(() => {
     loadTasks();
   }, []);
 
+  const loadTasks = async () => {
+    try {
+      const data = await TaskService.getActiveTasks();
+      setTasks(data);
+    } catch (error) {
+      console.error('Error cargando tareas:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleAddTask = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newTaskTitle.trim()) return;
+    if (!newTitle.trim()) return;
 
     try {
-      await TaskService.addTask(newTaskTitle, priority, category, undefined, dueDate, cognitiveLoad);
-      setNewTaskTitle('');
-      setPriority(1);
-      setCategory('General');
-      setDueDate(new Date().toISOString().split('T')[0]);
-      setIsAdding(false);
+      await TaskService.addTask(newTitle, newPriority, newCategory, newDueDate);
+      setNewTitle('');
+      setCreatorOpen(false);
       loadTasks();
-    } catch (err) {
-      alert(err);
+    } catch (error) {
+      console.error('Error al añadir tarea:', error);
     }
   };
 
-  const handleToggle = async (task: any) => {
-    await TaskService.toggleTaskStatus(task);
-    loadTasks();
-  };
-
-  const handleDelete = async (task: any) => {
-    if (window.confirm(`¿Eliminar la tarea "${task.title}"?`)) {
-      await TaskService.removeTask(task.id, task.uuid, task.title);
+  const handleToggleStatus = async (task: Task) => {
+    try {
+      await TaskService.toggleTaskStatus(task);
       loadTasks();
+    } catch (error) {
+      console.error('Error al cambiar estado:', error);
     }
   };
 
-  const getPriorityLabel = (p: number) => {
-    if (p === 3) return 'Alta';
-    if (p === 2) return 'Media';
-    return 'Baja';
+  const handleDelete = async (task: Task) => {
+    if (!confirm('¿Eliminar esta tarea?')) return;
+    try {
+      await TaskService.removeTask(task);
+      loadTasks();
+    } catch (error) {
+      console.error('Error al eliminar:', error);
+    }
   };
 
-  const setQuickDate = (type: 'today' | 'tomorrow' | 'nextWeek') => {
-    const date = new Date();
-    if (type === 'tomorrow') date.setDate(date.getDate() + 1);
-    if (type === 'nextWeek') date.setDate(date.getDate() + 7);
-    setDueDate(date.toISOString().split('T')[0]);
+  const getPriorityColor = (priority: number) => {
+    switch (priority) {
+      case 3: return 'hsl(var(--danger))';
+      case 2: return 'hsl(var(--warning))';
+      default: return 'hsl(var(--brand))';
+    }
   };
 
   return (
-    <div className="tareas-view animate-fade-in">
+    <div className="tareas-view animate-fade">
       <header className="view-header">
-        <div className="header-info">
+        <div>
           <h1>Mis Tareas</h1>
-          <p>{tasks.filter(t => t.status === 'pending').length} tareas pendientes para hoy</p>
+          <p className="subtitle">Gestiona tu enfoque diario con precisión.</p>
         </div>
-        <div className="header-actions">
-          <div className="view-mode-toggle">
-            <button 
-              onClick={() => setViewMode('list')} 
-              className={viewMode === 'list' ? 'active' : ''}
-              title="Vista de Lista"
-            >
-              <ListIcon size={18} />
-            </button>
-            <button 
-              onClick={() => setViewMode('board')} 
-              className={viewMode === 'board' ? 'active' : ''}
-              title="Vista de Tablero"
-            >
-              <BoardIcon size={18} />
-            </button>
-          </div>
-          {!isAdding && (
-            <button onClick={() => setIsAdding(true)} className="btn-fab-desktop">
-              <Plus size={20} />
-              <span>Añadir Tarea</span>
-            </button>
-          )}
-        </div>
+        {!isCreatorOpen && (
+          <button className="fab-button" onClick={() => setCreatorOpen(true)}>
+            <Plus size={24} />
+            <span>Nueva Tarea</span>
+          </button>
+        )}
       </header>
 
-      {isAdding && (
-        <div className="task-creator-card animate-slide-up">
+      {/* Inline Smart Creator */}
+      {isCreatorOpen && (
+        <div className="creator-card premium-card animate-fade">
           <form onSubmit={handleAddTask}>
             <input 
-              type="text" 
-              placeholder="¿Qué tienes en mente?" 
-              value={newTaskTitle}
-              onChange={(e) => setNewTaskTitle(e.target.value)}
-              className="creator-input"
               autoFocus
+              className="creator-input"
+              placeholder="¿Qué necesitas enfocar hoy?"
+              value={newTitle}
+              onChange={(e) => setNewTitle(e.target.value)}
             />
             
-            <div className="creator-options">
-              <div className="option-group">
-                <label><Flag size={14} /> Prioridad</label>
+            <div className="creator-actions">
+              <div className="action-group">
                 <div className="priority-selector">
                   {[1, 2, 3].map(p => (
                     <button 
                       key={p}
                       type="button"
-                      onClick={() => setPriority(p)}
-                      className={`priority-btn p${p} ${priority === p ? 'active' : ''}`}
+                      className={`priority-chip ${newPriority === p ? 'active' : ''}`}
+                      style={{ '--p-color': getPriorityColor(p) } as any}
+                      onClick={() => setNewPriority(p)}
                     >
-                      {getPriorityLabel(p)}
+                      <Flag size={14} />
+                      {p === 3 ? 'Alta' : p === 2 ? 'Media' : 'Baja'}
                     </button>
                   ))}
                 </div>
-              </div>
-
-              <div className="option-group">
-                <label><Brain size={14} /> Carga Cognitiva</label>
-                <div className="cognitive-selector">
-                  {['baja', 'media', 'alta'].map(load => (
-                    <button 
-                      key={load}
-                      type="button"
-                      onClick={() => setCognitiveLoad(load)}
-                      className={`load-btn ${load} ${cognitiveLoad === load ? 'active' : ''}`}
-                    >
-                      {load}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="option-group">
-                <label><Calendar size={14} /> Fecha</label>
-                <div className="date-quick-picks">
-                  <button type="button" onClick={() => setQuickDate('today')} className={dueDate === new Date().toISOString().split('T')[0] ? 'active' : ''}>Hoy</button>
-                  <button type="button" onClick={() => setQuickDate('tomorrow')}>Mañana</button>
+                
+                <div className="date-selector">
+                  <Calendar size={14} />
                   <input 
                     type="date" 
-                    value={dueDate} 
-                    onChange={(e) => setDueDate(e.target.value)}
-                    className="date-input"
+                    value={newDueDate} 
+                    onChange={(e) => setNewDueDate(e.target.value)}
                   />
                 </div>
               </div>
-            </div>
 
-            <div className="creator-actions">
-              <button type="button" onClick={() => setIsAdding(false)} className="btn-ghost">Cancelar</button>
-              <button type="submit" className="btn-primary" disabled={!newTaskTitle.trim()}>
-                Crear Tarea
-              </button>
+              <div className="form-buttons">
+                <button type="button" className="btn-ghost" onClick={() => setCreatorOpen(false)}>Cancelar</button>
+                <button type="submit" className="btn-primary" disabled={!newTitle.trim()}>
+                  <Sparkles size={16} />
+                  Crear Tarea
+                </button>
+              </div>
             </div>
           </form>
         </div>
       )}
 
-      <div className="task-content-main">
+      {/* Task List */}
+      <div className="tasks-grid">
         {loading ? (
-          <div className="loading-state">
-            <div className="spinner"></div>
-            <p>Organizando tu día...</p>
-          </div>
+          <div className="loading-state">Cargando tareas...</div>
         ) : tasks.length === 0 ? (
           <div className="empty-state">
-            <div className="empty-illustration">
-              <CheckCircle2 size={64} strokeWidth={1} />
-            </div>
-            <h2>Todo despejado</h2>
-            <p>No tienes tareas pendientes. Aprovecha para descansar o planear tu siguiente meta.</p>
-            <button onClick={() => setIsAdding(true)} className="btn-secondary">Crear mi primera tarea</button>
-          </div>
-        ) : viewMode === 'list' ? (
-          <div className="tasks-grid">
-            {tasks.map(task => (
-              <div key={task.id} className={`task-card-premium ${task.status} p${task.priority}`}>
-                <div className="task-main">
-                  <button onClick={() => handleToggle(task)} className="task-status-check">
-                    {task.status === 'completed' ? (
-                      <div className="checked-icon"><CheckCircle2 size={24} /></div>
-                    ) : (
-                      <div className="unchecked-icon"><Circle size={24} /></div>
-                    )}
-                  </button>
-                  
-                  <div className="task-content">
-                    <h3 className="task-title">{task.title}</h3>
-                    <div className="task-tags">
-                      <span className={`priority-indicator p${task.priority}`}>
-                        {getPriorityLabel(task.priority)}
-                      </span>
-                      <span className="load-tag" data-load={task.cognitive_load || 'media'}>
-                        <Brain size={12} /> {task.cognitive_load || 'media'}
-                      </span>
-                      {task.due_date && (
-                        <span className="date-tag">
-                          <Calendar size={12} /> {task.due_date === new Date().toISOString().split('T')[0] ? 'Hoy' : task.due_date}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="task-actions-menu">
-                    <button onClick={() => handleDelete(task)} className="action-btn delete">
-                      <Trash2 size={18} />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
+            <CheckCircle2 size={48} />
+            <p>Todo despejado. ¡Buen trabajo!</p>
           </div>
         ) : (
-          <div className="tasks-board">
-            {[
-              { id: 'pending', title: 'Por Hacer' },
-              { id: 'in_progress', title: 'En Proceso' },
-              { id: 'completed', title: 'Finalizado' }
-            ].map(column => (
-              <div key={column.id} className="board-column">
-                <div className="column-header">
-                  <h3>{column.title}</h3>
-                  <span className="count">{tasks.filter(t => (column.id === 'pending' ? t.status === 'pending' : t.status === column.id)).length}</span>
-                </div>
-                <div className="column-tasks">
-                  {tasks
-                    .filter(t => (column.id === 'pending' ? t.status === 'pending' : t.status === column.id))
-                    .map(task => (
-                      <div key={task.id} className={`board-task-card p${task.priority}`}>
-                        <div className="task-header-mini">
-                          <span className="load-dot" data-load={task.cognitive_load || 'media'}></span>
-                          <span className="priority-line"></span>
-                        </div>
-                        <h4>{task.title}</h4>
-                        <div className="task-footer-mini">
-                           <span className="date-mini">{task.due_date?.split('-').slice(1).join('/')}</span>
-                           <button onClick={() => handleToggle(task)} className="btn-toggle-mini">
-                             {task.status === 'completed' ? <CheckCircle2 size={16} /> : <Circle size={16} />}
-                           </button>
-                        </div>
-                      </div>
-                    ))}
+          tasks.map(task => (
+            <div key={task.id} className={`task-card premium-card ${task.status === 'completed' ? 'completed' : ''}`}>
+              <div className="task-side-accent" style={{ background: getPriorityColor(task.priority) }} />
+              
+              <button className="status-toggle" onClick={() => handleToggleStatus(task)}>
+                {task.status === 'completed' ? (
+                  <CheckCircle2 className="icon-done" />
+                ) : (
+                  <Circle className="icon-pending" />
+                )}
+              </button>
+
+              <div className="task-content">
+                <h3 className="task-title">{task.title}</h3>
+                <div className="task-meta">
+                  <span className="meta-item">
+                    <Tag size={12} />
+                    {task.category}
+                  </span>
+                  <span className="meta-item">
+                    <Calendar size={12} />
+                    {task.due_date}
+                  </span>
                 </div>
               </div>
-            ))}
-          </div>
+
+              <button className="delete-button" onClick={() => handleDelete(task)}>
+                <Trash2 size={18} />
+              </button>
+            </div>
+          ))
         )}
       </div>
-
-      {/* Floating Action Button for Mobile */}
-      {!isAdding && (
-        <button onClick={() => setIsAdding(true)} className="fab-mobile">
-          <Plus size={28} />
-        </button>
-      )}
     </div>
   );
 };

@@ -1,26 +1,45 @@
-import { GoalRepository, generateUUID } from '../db/repository';
+import { supabase } from '../lib/supabase';
+import { ActivityService } from './ActivityService';
 
-/**
- * Servicio de Metas (Capa de Lógica de Negocio)
- * Orquestador de la estrategia de metas y sus dependencias.
- */
+export interface Goal {
+  id: number;
+  title: string;
+  description: string;
+  category: string;
+  status: 'active' | 'completed' | 'paused';
+  target_date: string | null;
+  is_deleted: boolean;
+  created_at: string;
+}
+
 export const GoalService = {
-  async getActiveGoals() {
-    return await GoalRepository.getAll();
+  async getAll(): Promise<Goal[]> {
+    const { data, error } = await supabase
+      .from('goals')
+      .select('*')
+      .eq('is_deleted', false)
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    return data || [];
   },
 
-  async createGoal(title: string, description: string, category: string, targetDate: string) {
-    if (!title.trim()) throw new Error('El título de la meta es obligatorio.');
+  async addGoal(goal: Partial<Goal>) {
+    const { data, error } = await supabase
+      .from('goals')
+      .insert({ ...goal, status: 'active' })
+      .select()
+      .single();
+    if (error) throw error;
+    await ActivityService.log('create', 'goal', data.id.toString(), `Meta creada: ${goal.title}`);
+    return data;
+  },
 
-    const newGoal = {
-      uuid: generateUUID(),
-      title,
-      description,
-      category,
-      target_date: targetDate,
-      status: 'active'
-    };
-
-    return await GoalRepository.save(newGoal);
+  async deleteGoal(goal: Goal) {
+    const { error } = await supabase
+      .from('goals')
+      .update({ is_deleted: true, updated_at: new Date().toISOString() })
+      .eq('id', goal.id);
+    if (error) throw error;
+    await ActivityService.log('delete', 'goal', goal.id.toString(), `Meta eliminada: ${goal.title}`);
   }
 };

@@ -7,13 +7,15 @@ import {
   Music, 
   Play, 
   Zap, 
-  Plus
+  Plus,
+  ChevronRight,
+  Sparkles
 } from 'lucide-react';
 import './Santuario.css';
 
 const Santuario: React.FC = () => {
   const [isBreathing, setIsBreathing] = useState(false);
-  const [isAddingJournal, setIsAddingJournal] = useState(false);
+  const [isJournaling, setIsJournaling] = useState(false);
 
   const meditations = [
     { title: 'Claridad Matinal', duration: '5 min', icon: <Zap size={20} />, color: 'blue' },
@@ -23,87 +25,103 @@ const Santuario: React.FC = () => {
   ];
 
   return (
-    <div className="santuario-view animate-fade-in">
+    <div className="santuario-view animate-fade">
       <header className="view-header">
-        <div className="header-info">
+        <div>
           <h1>El Santuario</h1>
-          <p>Tu espacio para recuperar el equilibrio y reducir la ansiedad.</p>
+          <p className="subtitle">Tu espacio sagrado para recuperar el equilibrio.</p>
         </div>
-        {!isAddingJournal && (
-          <button onClick={() => setIsAddingJournal(true)} className="btn-fab">
-            <Plus size={20} />
+        {!isJournaling && (
+          <button className="fab-button" onClick={() => setIsJournaling(true)}>
+            <Sparkles size={20} />
             <span>Vaciar Mente</span>
           </button>
         )}
       </header>
 
-      {isAddingJournal && (
-        <div className="creator-card animate-slide-up">
-          <form onSubmit={(e) => { e.preventDefault(); setIsAddingJournal(false); }}>
-            <textarea 
-              className="creator-title-input" 
-              placeholder="¿Qué tienes en la mente ahora mismo? Suéltalo aquí..."
-              autoFocus
-              style={{ minHeight: '120px', resize: 'none' }}
-            />
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-md)', marginTop: 'var(--space-lg)' }}>
-              <button type="button" className="btn-ghost" onClick={() => setIsAddingJournal(false)}>Cancelar</button>
-              <button type="submit" className="btn-primary">Guardar Reflexión</button>
-            </div>
-          </form>
+      {isJournaling && (
+        <div className="creator-card premium-card animate-fade">
+          <textarea 
+            autoFocus
+            className="journal-textarea"
+            placeholder="¿Qué tienes en la mente ahora mismo? Suéltalo aquí sin juicio..."
+          />
+          <div className="creator-actions-footer">
+            <button className="btn-ghost" onClick={() => setIsJournaling(false)}>Cancelar</button>
+            <button className="btn-primary" onClick={() => setIsJournaling(false)}>Guardar Reflexión</button>
+          </div>
         </div>
       )}
 
-      <section className="breathing-card">
-        <div className="card-content">
-          <div className="icon-circle"><Wind size={32} /></div>
-          <div className="text-info">
-            <h2>Respiración Guiada</h2>
-            <p>4 segundos de inhalación, 4 de exhalación. Calma tu sistema nervioso.</p>
-          </div>
-          <button 
-            className={`btn-breathing ${isBreathing ? 'active' : ''}`}
-            onClick={() => setIsBreathing(!isBreathing)}
-          >
-            {isBreathing ? 'Finalizar' : 'Empezar'}
-          </button>
-        </div>
-        {isBreathing && (
-          <div className="breathing-animation-container">
-            <div className="breathing-circle"></div>
-            <span className="breathing-text">Inhala... exhala...</span>
-          </div>
-        )}
-      </section>
-
-      <section className="meditation-library">
-        <div className="section-header">
-          <Music size={20} className="icon-accent" />
-          <h2>Micro-meditaciones</h2>
-        </div>
-        <div className="meditation-grid">
-          {meditations.map((med, i) => (
-            <div key={i} className={`meditation-item ${med.color}`}>
-              <div className="med-icon">{med.icon}</div>
-              <div className="med-info">
-                <h3>{med.title}</h3>
-                <span>{med.duration}</span>
+      <div className="santuario-grid">
+        {/* Breathing Exercise */}
+        <section className={`breathing-box premium-card ${isBreathing ? 'active' : ''}`}>
+           <div className="breathing-content">
+              <div className="breathing-header">
+                 <Wind className="icon-pulse" />
+                 <div>
+                    <h3>Respiración Consciente</h3>
+                    <p>Inhala paz, exhala tensión. Método 4-4-4.</p>
+                 </div>
               </div>
-              <button className="btn-play-mini"><Play size={16} fill="currentColor" /></button>
-            </div>
-          ))}
-        </div>
-      </section>
+              <button 
+                className={`btn-breathing ${isBreathing ? 'stop' : 'start'}`}
+                onClick={() => setIsBreathing(!isBreathing)}
+              >
+                {isBreathing ? 'Detener' : 'Iniciar'}
+              </button>
+           </div>
+           
+           {isBreathing && (
+             <div className="breathing-viz">
+                <div className="breathing-circle-outer">
+                   <div className="breathing-circle-inner"></div>
+                </div>
+                <span className="breathing-label">Respira...</span>
+             </div>
+           )}
+        </section>
 
-      <section className="stress-meter-section">
-        <div className="section-header">
-          <Zap size={20} className="icon-accent" />
-          <h2>Control de Estrés</h2>
-        </div>
-        <div className="stress-card">
-          <p>Tu nivel de estrés actual es <strong>Bajo</strong>. Es un buen momento para tareas creativas.</p>
-          <div className="stress-bar"><div className="fill" style={{ width: '25%' }}></div></div>
-        </div>
+        {/* Meditation Library */}
+        <section className="meditation-library-card">
+           <div className="section-title-sm">
+              <Music size={18} />
+              <h2>Micro-meditaciones</h2>
+           </div>
+           <div className="meditation-list">
+              {meditations.map((med, i) => (
+                <div key={i} className="meditation-card premium-card">
+                   <div className="med-icon-box">{med.icon}</div>
+                   <div className="med-info">
+                      <h4>{med.title}</h4>
+                      <span>{med.duration}</span>
+                   </div>
+                   <button className="play-btn">
+                      <Play size={14} fill="currentColor" />
+                   </button>
+                </div>
+              ))}
+           </div>
+        </section>
+      </div>
+
+      {/* Stress Meter */}
+      <section className="stress-meter premium-card">
+         <div className="card-header">
+            <Zap size={20} className="icon-brand" />
+            <h2>Carga Cognitiva Actual</h2>
+         </div>
+         <div className="meter-container">
+            <div className="meter-track">
+               <div className="meter-fill" style={{ width: '28%' }}></div>
+            </div>
+            <div className="meter-labels">
+               <span>Baja</span>
+               <span className="active">Óptima</span>
+               <span>Sobrecarga</span>
+            </div>
+         </div>
+         <p className="meter-hint">Tu cerebro está en condiciones ideales para trabajo creativo.</p>
       </section>
     </div>
   );

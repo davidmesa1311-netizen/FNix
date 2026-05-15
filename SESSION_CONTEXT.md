@@ -11,6 +11,7 @@
 - **Glassmorphism & Calm Tech:** Unificación del sistema de superficies traslúcidas y animaciones de respiración.
 - **Análisis de Rendimiento:** Módulo `Analisis.tsx` con métricas de disciplina, velocidad y balance cognitivo.
 - **Sincronización Externa:** "Sync Hub" en Calendario para Google/Outlook y exportación ICS.
+- **Despliegue y Producción:** Resolución de errores de build de TypeScript y despliegue exitoso en Vercel.
 
 ### 3. Decisiones Técnicas y de Diseño
 - **Inmersión Total:** Los modos cambian la arquitectura de información, no solo el estilo. Se ocultan métricas en estados de baja energía para reducir el estrés.
