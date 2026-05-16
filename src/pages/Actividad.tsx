@@ -5,7 +5,8 @@ import {
   CheckCircle2, 
   Trash2, 
   RefreshCw,
-  Clock
+  Clock,
+  Filter
 } from 'lucide-react';
 import { ActivityService } from '../services/ActivityService';
 import './Actividad.css';

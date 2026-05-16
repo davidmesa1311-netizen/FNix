@@ -201,6 +201,25 @@
   color: hsl(var(--success));
 }
 
+.logout-btn {
+  background: none;
+  border: none;
+  color: hsl(var(--text-muted));
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+  margin-left: auto;
+}
+
+.logout-btn:hover {
+  color: hsl(var(--danger));
+  background: hsla(var(--danger), 0.1);
+}
+
 /* Main Content */
 .main-content {
   flex: 1;

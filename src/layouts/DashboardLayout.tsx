@@ -13,8 +13,10 @@ import {
   X,
   Sparkles,
   Sun,
-  Moon
+  Moon,
+  LogOut
 } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
 import './DashboardLayout.css';
 
 const navItems = [
@@ -33,6 +35,7 @@ const DashboardLayout: React.FC = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [isDark, setIsDark] = useState(true);
   const location = useLocation();
+  const { user, signOut } = useAuth();
 
   React.useEffect(() => {
     document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
@@ -43,6 +46,25 @@ const DashboardLayout: React.FC = () => {
   const getPageTitle = () => {
     const item = navItems.find(item => item.path === location.pathname);
     return item ? item.label : 'FNix';
+  };
+
+  // Obtener el nombre para mostrar del usuario
+  const getUserDisplayName = () => {
+    if (!user) return 'Usuario';
+    return user.user_metadata?.display_name || user.email?.split('@')[0] || 'Usuario';
+  };
+
+  const getUserInitial = () => {
+    const name = getUserDisplayName();
+    return name.charAt(0).toUpperCase();
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+    } catch (err) {
+      console.error('Error al cerrar sesión:', err);
+    }
   };
 
   return (
@@ -99,11 +121,14 @@ const DashboardLayout: React.FC = () => {
             <span>{isDark ? 'Modo Claro' : 'Modo Oscuro'}</span>
           </button>
           <div className="user-profile">
-            <div className="avatar">D</div>
+            <div className="avatar">{getUserInitial()}</div>
             <div className="user-info">
-              <span className="user-name">David</span>
+              <span className="user-name">{getUserDisplayName()}</span>
               <span className="user-status">Enfoque: Alto</span>
             </div>
+            <button onClick={handleSignOut} className="logout-btn" aria-label="Cerrar sesión" title="Cerrar sesión">
+              <LogOut size={18} />
+            </button>
           </div>
         </div>
       </aside>
