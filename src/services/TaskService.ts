@@ -11,6 +11,7 @@ export interface Task {
   due_date: string;
   is_deleted: boolean;
   created_at: string;
+  cognitive_load?: 'baja' | 'media' | 'alta';
 }
 
 export const TaskService = {
