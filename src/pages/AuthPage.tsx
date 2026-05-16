@@ -59,6 +59,7 @@ const AuthPage: React.FC = () => {
         <div className="bg-orb bg-orb-1"></div>
         <div className="bg-orb bg-orb-2"></div>
         <div className="bg-orb bg-orb-3"></div>
+        <div className="bg-grid-overlay"></div>
       </div>
 
       <div className="auth-container animate-fade">
@@ -78,8 +79,8 @@ const AuthPage: React.FC = () => {
           </h2>
           <p className="auth-subtitle">
             {isLogin
-              ? 'Inicia sesión para continuar tu progreso'
-              : 'Comienza a transformar tu productividad'}
+              ? 'Tu santuario de productividad te espera.'
+              : 'Únete al renacimiento de tu enfoque personal.'}
           </p>
 
           {error && (

@@ -42,7 +42,7 @@ const Finanzas: React.FC = () => {
     e.preventDefault();
     if (!newDesc.trim() || newAmount <= 0) return;
     try {
-      await FinanceService.addRecord(newDesc, newAmount, newCategory, newDay);
+      await FinanceService.addRecord(newDesc, newAmount, newDay);
       setNewDesc('');
       setNewAmount(0);
       setCreatorOpen(false);
@@ -164,8 +164,8 @@ const Finanzas: React.FC = () => {
                  <strong>{record.due_day}</strong>
               </div>
               <div className="record-main">
-                <h3 className="record-desc">{record.description}</h3>
-                <span className="record-cat">{record.category}</span>
+                <h3 className="record-desc">{record.title}</h3>
+                <span className="record-cat">Día {record.due_day}</span>
               </div>
               <div className="record-amount">
                 ${record.amount.toLocaleString()}

@@ -1,4 +1,5 @@
 import { supabase } from '../lib/supabase';
+import { getCurrentUserId } from '../lib/auth';
 import { ActivityService } from './ActivityService';
 
 export interface Goal {
@@ -10,13 +11,16 @@ export interface Goal {
   target_date: string | null;
   is_deleted: boolean;
   created_at: string;
+  user_id?: string;
 }
 
 export const GoalService = {
   async getAll(): Promise<Goal[]> {
+    const userId = await getCurrentUserId();
     const { data, error } = await supabase
       .from('goals')
       .select('*')
+      .eq('user_id', userId)
       .eq('is_deleted', false)
       .order('created_at', { ascending: false });
     if (error) throw error;
@@ -24,9 +28,10 @@ export const GoalService = {
   },
 
   async addGoal(goal: Partial<Goal>) {
+    const userId = await getCurrentUserId();
     const { data, error } = await supabase
       .from('goals')
-      .insert({ ...goal, status: 'active' })
+      .insert({ ...goal, status: 'active', user_id: userId })
       .select()
       .single();
     if (error) throw error;
